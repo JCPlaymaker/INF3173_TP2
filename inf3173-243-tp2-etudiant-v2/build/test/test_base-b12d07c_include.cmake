@@ -1,0 +1,5 @@
+if(EXISTS "/home/jaycee/Downloads/inf3173-243-tp2-etudiant-v2/build/test/test_base-b12d07c_tests.cmake")
+  include("/home/jaycee/Downloads/inf3173-243-tp2-etudiant-v2/build/test/test_base-b12d07c_tests.cmake")
+else()
+  add_test(test_base_NOT_BUILT-b12d07c test_base_NOT_BUILT-b12d07c)
+endif()

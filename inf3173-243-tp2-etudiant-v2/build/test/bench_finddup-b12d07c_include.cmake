@@ -1,0 +1,5 @@
+if(EXISTS "/home/jaycee/Downloads/inf3173-243-tp2-etudiant-v2/build/test/bench_finddup-b12d07c_tests.cmake")
+  include("/home/jaycee/Downloads/inf3173-243-tp2-etudiant-v2/build/test/bench_finddup-b12d07c_tests.cmake")
+else()
+  add_test(bench_finddup_NOT_BUILT-b12d07c bench_finddup_NOT_BUILT-b12d07c)
+endif()
