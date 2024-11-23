@@ -35,7 +35,6 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
             }
             close(fd);
         }
-
     
     node = node->next;
   }
