@@ -14,6 +14,9 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
   int ok = 0;
   struct list_node* node = list_head(files);
 
+  printf("finddup_mmap\n");
+  FILE* f = NULL;
+
   while (!list_end(node)) {
     const char* fname = node->data;
 
@@ -51,18 +54,14 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
           // Taille du bloc actuel (le dernier bloc peut être plus petit)
           size_t current_block_size = (file_size - offset < block_size) ? (file_size - offset) : block_size;
           // Calculer le CRC pour ce bloc
-          hash = crc32(hash, map + offset, current_block_size);
+          hash = crc32(hash, buff + offset, current_block_size);
           // Passer au bloc suivant
           offset += current_block_size;
         }
-        struct {
-          uint32_t hash;
-          const char* fname;
-        } item = {hash, fname};
-
-        hashmap_set(hmap, &item);
+        
+	filegroup_add(hmap, hash, fname);
         ok++;
-        munmap(map, file_size);
+	munmap(buff, file_size);
       }
     }
     close(fd);
