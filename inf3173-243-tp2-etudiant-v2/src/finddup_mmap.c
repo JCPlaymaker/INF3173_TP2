@@ -17,14 +17,14 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
     const char* fname = node->data;
 
     int fd = open(fname, O_RDONLY);
-    if(fd == -1){
-            perror("Erreur lors de l'ouverture du fichier");
+    if(fd < 0){
+            perror("open");
             node = node->next;
             continue;
     }else{
 	  struct stat st;
 	  if (fstat(fd, &st) == -1){
-	     perror("Erreur lors de fstat");
+	     perror("fstat");
 	     close(fd);
 	     node = node -> next;
 	     continue;
@@ -32,9 +32,13 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
               size_t file_size = st.st_size;
                 // Mapper le ficher en mémoire
 
-              char* map = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
-              if (map == MAP_FAILED) {
-		perror("Erreur lors de mmap");
+              char* buff = mmap(NULL,
+			      file_size, PROT_READ | PROT_WRITE,
+			      MAP_SHARED | MAP_PRIVATE,
+			      fd,
+			      0);
+              if (buff == MAP_FAILED) {
+		perror("mmap");
 		close(fd);
 		node = node -> next;
 		continue;		
@@ -48,7 +52,7 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
                    size_t current_block_size = (file_size - offset < block_size) ? (file_size - offset) : block_size;
 
                     // Calculer le CRC pour ce bloc
-                    hash = crc32(hash, map + offset, current_block_size);
+                    hash = crc32(hash, buff + offset, current_block_size);
 
                     // Passer au bloc suivant
                     offset += current_block_size;
@@ -61,7 +65,7 @@ int finddup_mmap(struct list* files, struct hashmap* hmap, int block_size) {
                   hashmap_set(hmap, &item);
 
 		  ok++;
-                  munmap(map, file_size);
+                  munmap(buff, file_size);
                 }
         }
     close(fd);    
