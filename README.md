@@ -1,5 +1,7 @@
 # INF3173-243-TP2 - Détection des fichiers identiques
 
+(Note obtenue: 130/130)
+
 L'outil à développer dans ce TP consiste à détecter des fichiers identiques. Par exemple, on pourrait libérer de l'espace en supprimant les fichiers redondants.
 
 La façon simple serait de comparer chaque fichiers à tous les autres fichiers. Si nous avons N fichiers, alors il s'agit d'un algorithme ineffiscient en temps O(N^2). Comment faire mieux?
